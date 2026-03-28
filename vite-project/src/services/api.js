@@ -47,6 +47,10 @@ export const authService = {
     });
     return response.data;
   },
+  verifyOtp: async (email, token) => {
+    const response = await api.post('/auth/verify-otp', { email, token });
+    return response.data;
+  },
   login: async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
     return response.data;

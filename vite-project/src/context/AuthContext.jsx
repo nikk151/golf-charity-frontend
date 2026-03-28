@@ -14,6 +14,20 @@ export const AuthProvider = ({ children }) => {
 
   // Hydrate session on mount — validates stored token against the API
   useEffect(() => {
+    // 1. Check for a token in the URL Hash (standard for Supabase email confirms)
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token=')) {
+      const params = new URLSearchParams(hash.replace('#', '?'));
+      const newToken = params.get('access_token');
+      if (newToken) {
+        // Automatically save the token and log the user in
+        localStorage.setItem(TOKEN_KEY, newToken);
+        setToken(newToken);
+        window.location.hash = ''; // Clear the hash for security
+        return;
+      }
+    }
+
     if (!token) {
       setIsHydrating(false);
       return;
